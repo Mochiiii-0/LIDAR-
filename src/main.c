@@ -1,25 +1,24 @@
-/* main.c — AVANCE 3: la placa le habla al PC por el cable USB (USART2).
-   Y el LED ya no se maneja con registros sueltos sino con las funciones de gpio.c */
+/* main.c — AVANCE 4: mover UN servo (pan) a 0°, 90° y 180°. */
 #include "board.h"
 #include "clock.h"
 #include "systick.h"
-#include "gpio.h"
 #include "uart.h"
- 
+#include "servo.h"
+
 int main(void){
     clock_84mhz();
     systick_init();
-    uart_init();                         /* PA2/PA3 en AF7, 115 200 baudios */
- 
-    gpio_clock(GPIOA);                   /* LED: reloj del puerto A ... */
-    gpio_out(GPIOA, 5u);                 /* ... y PA5 como salida */
- 
-    uint32_t n = 0;
+    uart_init();
+    servo_init();
+
+    const int16_t angulos[] = { 0, 90, 180, 90 };
+    uint32_t i = 0;
     while (1) {
-        uart_texto("Hola LIDAR ");       /* se ve en Serial Monitor a 115200 */
-        uart_num(n++);
+        servo_pan(angulos[i]);           /* cambia TIM3->CCR1 */
+        uart_texto("pan = ");
+        uart_num((uint32_t)angulos[i]);
         uart_texto("\r\n");
-        gpio_hi(GPIOA, 5u); delay_ms(100);   /* LED prendido 0.1 s */
-        gpio_lo(GPIOA, 5u); delay_ms(900);   /* apagado 0.9 s */
+        i = (i + 1u) % 4u;               /* 0, 1, 2, 3, 0, 1, ... */
+        delay_ms(1000);
     }
 }
