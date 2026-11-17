@@ -1,12 +1,12 @@
 #include <sys/stat.h>
 #include <errno.h>
- 
- 
+
+
 #include <errno.h>
 #undef errno
 extern int errno;
- 
- 
+
+
 /**
 * This will execute an ebreak instruction and assume that the
 * CPU will halt or simulation environment will terminate.
@@ -15,7 +15,7 @@ void _exit(int i)
 {
 	 __asm__ __volatile__ (" BKPT ");
 }
- 
+
 /**
 * It is assumed that there is exactly only process running and that
 * it does not support signals.  Therefore calling this is effectively
@@ -29,7 +29,7 @@ void _kill(int pid)
 	return;						// arguably, this might also be acceptable
 #endif
 }
- 
+
 /**
 * This returns the process ID of the runnung program.
 * This library assumes that there is only process that
@@ -42,7 +42,7 @@ int _getpid(void)
   return 1;
 }
  
- 
+
 /**
 * This library does not support any file I/O of any kind.
 *
@@ -107,7 +107,7 @@ int _read(int file, char *ptr, int len)
 {
 	return 0;
 }
- 
+
 /**
 * This function should satify the caller by simply returning len
 * indicating that the write has succeeded as requested in spite
@@ -141,11 +141,11 @@ char *_sbrk (int delta)
 {
 	extern char _ebss[];
 	static char *end_of_data = _ebss;
- 
+
 	char *ptr = end_of_data;
 	end_of_data += delta;
 	return ptr;
 }
- 
+
 void _init(void) {}
 void _fini(void) {}

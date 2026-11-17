@@ -28,10 +28,10 @@
   .cpu cortex-m4
   .fpu softvfp
   .thumb
- 
+
 .global  g_pfnVectors
 .global  Default_Handler
- 
+
 /* start address for the initialization values of the .data section. 
 defined in linker script */
 .word  _sidata
@@ -44,7 +44,7 @@ defined in linker script */
 /* end address for the .bss section. defined in linker script */
 .word  _ebss
 /* stack used for SystemInit_ExtMemCtl; always internal RAM used */
- 
+
 /**
  * @brief  This is the code that gets called when the processor first
  *          starts execution following a reset event. Only the absolutely
@@ -53,28 +53,28 @@ defined in linker script */
  * @param  None
  * @retval : None
 */
- 
+
     .section  .text.Reset_Handler
   .weak  Reset_Handler
   .type  Reset_Handler, %function
 Reset_Handler:  
   ldr   sp, =_estack    		 /* set stack pointer */
- 
+
 /* Call the clock system initialization function.*/
   bl  SystemInit  
- 
+
 /* Copy the data segment initializers from flash to SRAM */  
   ldr r0, =_sdata
   ldr r1, =_edata
   ldr r2, =_sidata
   movs r3, #0
   b LoopCopyDataInit
- 
+
 CopyDataInit:
   ldr r4, [r2, r3]
   str r4, [r0, r3]
   adds r3, r3, #4
- 
+
 LoopCopyDataInit:
   adds r4, r0, r3
   cmp r4, r1
@@ -85,11 +85,11 @@ LoopCopyDataInit:
   ldr r4, =_ebss
   movs r3, #0
   b LoopFillZerobss
- 
+
 FillZerobss:
   str  r3, [r2]
   adds r2, r2, #4
- 
+
 LoopFillZerobss:
   cmp r2, r4
   bcc FillZerobss
@@ -100,7 +100,7 @@ LoopFillZerobss:
   bl  main
   bx  lr    
 .size  Reset_Handler, .-Reset_Handler
- 
+
 /**
  * @brief  This is the code that gets called when the processor receives an 
  *         unexpected interrupt.  This simply enters an infinite loop, preserving
@@ -228,9 +228,9 @@ g_pfnVectors:
   .word     0                                 /* Reserved                     */
   .word     SPI4_IRQHandler                   /* SPI4                         */     
                     
- 
+
   .size  g_pfnVectors, .-g_pfnVectors
- 
+
 /*******************************************************************************
 *
 * Provide weak aliases for each Exception handler to the Default_Handler. 
@@ -249,19 +249,19 @@ g_pfnVectors:
   
    .weak      BusFault_Handler
    .thumb_set BusFault_Handler,Default_Handler
- 
+
    .weak      UsageFault_Handler
    .thumb_set UsageFault_Handler,Default_Handler
- 
+
    .weak      SVC_Handler
    .thumb_set SVC_Handler,Default_Handler
- 
+
    .weak      DebugMon_Handler
    .thumb_set DebugMon_Handler,Default_Handler
- 
+
    .weak      PendSV_Handler
    .thumb_set PendSV_Handler,Default_Handler
- 
+
    .weak      SysTick_Handler
    .thumb_set SysTick_Handler,Default_Handler              
   
@@ -429,6 +429,6 @@ g_pfnVectors:
                         
    .weak      FPU_IRQHandler                  
    .thumb_set FPU_IRQHandler,Default_Handler  
- 
+
    .weak      SPI4_IRQHandler                  
    .thumb_set SPI4_IRQHandler,Default_Handler 
