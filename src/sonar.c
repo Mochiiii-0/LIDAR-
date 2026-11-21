@@ -1,40 +1,59 @@
-/* sonar.c — VERSIÓN 1: HC-SR04 "a lo bruto": la CPU espera mirando el pin Echo.
-   Funciona, pero mientras espera NO puede hacer nada más. En el avance 7 se mejora con Input Capture. */
+/* sonar.c — HC-SR04: gritar en Trig y cronometrar Echo con Input Capture de TIM2 */
 #include "sonar.h"
 #include "board.h"
 #include "gpio.h"
 
+typedef enum { ESPERA_SUBIDA, ESPERA_BAJADA, LISTO } eco_t;
+static volatile eco_t    eco = LISTO;
+static volatile uint32_t t_sube, t_baja;
+
 void sonar_init(void){
     gpio_clock(GPIOA);
-    gpio_out(TRIG_PORT, TRIG_PIN);                   /* PA8 = salida (Trig) */
+    gpio_out(TRIG_PORT, TRIG_PIN);
     gpio_lo(TRIG_PORT, TRIG_PIN);
-    ECHO_PORT->MODER &= ~(3u << (2u * ECHO_PIN));    /* PA0 = ENTRADA (MODER = 00). ¡Con divisor! */
+    gpio_af(ECHO_PORT, ECHO_PIN, ECHO_AF);          /* PA0 se lo presta a TIM2_CH1 */
 
-    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;              /* TIM2 solo como cronómetro */
-    TIM2->PSC = 83u;                                 /* 1 cuenta = 1 us */
-    TIM2->ARR = 0xFFFFFFFFu;                         /* 32 bits: casi nunca da la vuelta */
-    TIM2->EGR = TIM_EGR_UG;
-    TIM2->CR1 |= TIM_CR1_CEN;
+    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+    TIM2->PSC   = 83u;                              /* 1 MHz -> 1 cuenta = 1 us */
+    TIM2->ARR   = 0xFFFFFFFFu;                      /* 32 bits: da la vuelta cada ~71 min */
+    TIM2->CCMR1 = (TIM2->CCMR1 & ~0xFFu)
+                | (1u << TIM_CCMR1_CC1S_Pos)        /* CC1S = 01: el canal 1 es ENTRADA (TI1) */
+                | (3u << TIM_CCMR1_IC1F_Pos);       /* filtro: ignora ruido de menos de 8 tics */
+    TIM2->CCER |= TIM_CCER_CC1P | TIM_CCER_CC1NP    /* capturar en AMBOS flancos */
+                | TIM_CCER_CC1E;                    /* habilitar la captura */
+    TIM2->DIER |= TIM_DIER_CC1IE;                   /* avisar con interrupción en cada captura */
+    TIM2->EGR   = TIM_EGR_UG;
+    NVIC_SetPriority(TIM2_IRQn, 1);
+    NVIC_EnableIRQ(TIM2_IRQn);
+    TIM2->CR1  |= TIM_CR1_CEN;
 }
 
-static int echo_alto(void){                          /* leer el pin Echo: 1 o 0 */
-    return (ECHO_PORT->IDR >> ECHO_PIN) & 1u;
+static void espera_us(uint32_t us){
+    uint32_t t0 = TIM2->CNT;                        /* TIM2 también sirve de cronómetro */
+    while (TIM2->CNT - t0 < us) { }
 }
 
-uint32_t sonar_medir_mm(void){
-    gpio_hi(TRIG_PORT, TRIG_PIN);                    /* 1. gritar: Trig en 1 ... */
-    uint32_t t0 = TIM2->CNT;
-    while (TIM2->CNT - t0 < 12u) { }                 /*    ... durante 12 us */
+void sonar_disparar(void){
+    eco = ESPERA_SUBIDA;                            /* "listo para anotar el primer flanco" */
+    gpio_hi(TRIG_PORT, TRIG_PIN);
+    espera_us(12u);                                 /* el HC-SR04 pide >= 10 us */
     gpio_lo(TRIG_PORT, TRIG_PIN);
+}
 
-    t0 = TIM2->CNT;
-    while (!echo_alto())                             /* 2. esperar a que Echo suba */
-        if (TIM2->CNT - t0 > 30000u) return 0u;      /*    (si en 30 ms no sube: nada) */
-    uint32_t sube = TIM2->CNT;                       /* 3. anotar la hora de subida */
+int sonar_listo(void){ return eco == LISTO; }
 
-    while (echo_alto())                              /* 4. esperar a que Echo baje */
-        if (TIM2->CNT - sube > 30000u) return 0u;    /*    (30 ms = más de 5 m: nada) */
-    uint32_t ancho = TIM2->CNT - sube;               /* 5. cuánto estuvo en alto, en us */
+uint32_t sonar_mm(void){
+    uint32_t ancho = t_baja - t_sube;               /* us que Echo estuvo en alto */
+    uint32_t mm = (ancho * 343u) / 2000u;           /* 0.343 mm/us, ida y vuelta -> /2 */
+    if (mm < 20u || mm > 4000u) return 0u;          /* fuera de rango: "no vi nada" */
+    return mm;
+}
 
-    return (ancho * 343u) / 2000u;                   /* 6. us -> mm (0.343 mm/us, ida y vuelta) */
+void TIM2_IRQHandler(void){
+    if (TIM2->SR & TIM_SR_CC1IF){
+        uint32_t c = TIM2->CCR1;                    /* leer CCR1 también baja CC1IF */
+        if (eco == ESPERA_SUBIDA)      { t_sube = c; eco = ESPERA_BAJADA; }
+        else if (eco == ESPERA_BAJADA) { t_baja = c; eco = LISTO; }
+    }
+    if (TIM2->SR & TIM_SR_CC1OF) TIM2->SR = ~TIM_SR_CC1OF;   /* se perdió un flanco: limpiar */
 }

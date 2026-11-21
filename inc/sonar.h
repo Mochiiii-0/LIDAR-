@@ -1,8 +1,8 @@
 #ifndef SONAR_H
 #define SONAR_H
 #include <stdint.h>
-
-/* Versión 1 (sencilla): la CPU se queda mirando el pin Echo */
 void     sonar_init(void);
-uint32_t sonar_medir_mm(void);   /* tarda hasta 60 ms; devuelve 0 si no hay eco */
+void     sonar_disparar(void);  /* pulso de 12 us en Trig; no bloquea */
+int      sonar_listo(void);     /* 1 cuando ya llegaron los dos flancos del eco */
+uint32_t sonar_mm(void);        /* distancia en mm, 0 si está fuera de rango */
 #endif
