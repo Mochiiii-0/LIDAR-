@@ -171,7 +171,10 @@ Estos tamaños dependen de la versión del código y de las opciones de compilac
 ## Autoría y uso de inteligencia artificial
 
 **Autores:** Iván Carpentier y Sara Sofía Otero.
+## Uso de inteligencia artificial
 
-Se utilizó asistencia de **Claude** en propuestas y explicaciones del firmware, y de **ChatGPT** en la organización de la documentación, el informe y los diagramas. Los integrantes realizaron el montaje, las pruebas y la revisión técnica del proyecto. Los archivos de arranque y enlazado adaptados de ejemplos del curso deben identificarse como tales; los archivos con asistencia de IA deben declararse de forma trazable en la documentación del repositorio.
+Durante el desarrollo del proyecto se emplearon herramientas de inteligencia artificial como apoyo en la planificación del cronograma, las simulaciones previas al montaje físico, la validación de la lógica del programa, la organización y optimización del firmware y la revisión de código y documentación.
 
-**Institución:** Escuela Colombiana de Ingeniería Julio Garavito — Microprocesadores e Interfaces (MPEI).
+La implementación, integración y verificación del funcionamiento sobre el hardware fueron responsabilidad del equipo.
+
+La descripción detallada se encuentra en Declaración de uso de IA.
