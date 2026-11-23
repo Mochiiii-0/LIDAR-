@@ -171,7 +171,6 @@ Estos tamaños dependen de la versión del código y de las opciones de compilac
 ## Autoría y uso de inteligencia artificial
 
 **Autores:** Iván Carpentier y Sara Sofía Otero.
-## Uso de inteligencia artificial
 
 Durante el desarrollo del proyecto se emplearon herramientas de inteligencia artificial como apoyo en la planificación del cronograma, las simulaciones previas al montaje físico, la validación de la lógica del programa, la organización y optimización del firmware y la revisión de código y documentación.
 
