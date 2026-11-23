@@ -166,8 +166,7 @@ Estos tamaños dependen de la versión del código y de las opciones de compilac
 - **Limitaciones físicas:** el ángulo de apertura del ultrasonido, la orientación de las superficies, la presencia de ecos falsos y los tiempos de espera del sensor limitan la resolución y la velocidad de exploración.
 
 ## Documentación y referencias
-
-Incluir en `docs/` el informe IEEE (PDF), la presentación final, el diagrama de bloques, el esquemático eléctrico, la máquina de estados y las evidencias experimentales. Como fuentes técnicas se emplean el manual de referencia **RM0368** de STMicroelectronics y las hojas de datos de los módulos HC-SR04, SG90 e ILI9341.
+ Como fuentes técnicas se emplean el manual de referencia **RM0368** de STMicroelectronics y las hojas de datos de los módulos HC-SR04, SG90 e ILI9341.
 
 ## Autoría y uso de inteligencia artificial
 
