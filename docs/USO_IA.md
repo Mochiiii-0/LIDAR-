@@ -45,3 +45,46 @@ El equipo fue responsable de las decisiones finales de diseño, la selección y 
 Las simulaciones y sugerencias generadas mediante IA se consideraron recursos de apoyo, mientras que la validación definitiva del sistema correspondió a las pruebas realizadas sobre el hardware.
 
 Los archivos desarrollados o modificados con asistencia de IA deben identificarse en el repositorio para mantener la trazabilidad del proceso de desarrollo y diferenciar los aportes de estas herramientas del trabajo realizado directamente por el equipo.
+
+## 6. Identificación de archivos y código asistido
+
+Con el propósito de mantener la transparencia y trazabilidad del desarrollo, se identifican los archivos en los que se emplearon herramientas de inteligencia artificial como apoyo para la programación, organización, optimización y revisión del código.
+
+La asistencia de IA fue parcial y variable según el archivo. Esto no significa que la totalidad del código haya sido generada automáticamente.
+
+### 6.1. Archivos desarrollados con asistencia de IA
+
+| Archivo | Tipo de asistencia |
+|---|---|
+| `src/main.c` | Organización y optimización de la lógica principal, implementación de la máquina de estados y coordinación de los módulos. |
+| `src/escaneo.c` | Revisión y organización del algoritmo de barrido serpenteante y control de posiciones angulares. |
+| `src/sonar.c` | Apoyo en la lógica de medición ultrasónica, temporización e interrupciones de TIM2. |
+| `src/pantalla.c` | Organización de funciones para la representación gráfica y actualización de la pantalla. |
+| `src/color.c` | Revisión y optimización de funciones para convertir distancias a colores RGB565. |
+| `inc/board.h` | Organización y documentación de la asignación de pines del sistema. |
+| `inc/escaneo.h` | Definición y revisión de estructuras, constantes y declaraciones del módulo de escaneo. |
+| `inc/sonar.h` | Revisión de declaraciones y organización de la interfaz del módulo ultrasónico. |
+| `inc/pantalla.h` | Apoyo en la definición y documentación de funciones y parámetros de visualización. |
+
+Adicionalmente, se utilizaron herramientas de inteligencia artificial para revisar fragmentos de otros módulos, identificar posibles errores de programación y proponer mejoras relacionadas con la claridad, modularidad y mantenimiento del firmware.
+
+### 6.2. Archivos basados en material del profesor
+
+Los siguientes archivos se tomaron como base de ejemplos y materiales proporcionados durante el curso de Microprocesadores e Interfaces:
+
+| Archivo | Origen y modificaciones |
+|---|---|
+| `startup/crt0.S` | Archivo de arranque basado en el material del curso, originalmente derivado de código de STMicroelectronics. Fue revisado y adaptado para su integración en el proyecto. |
+| `linker/linker_script.ld` | Script de enlazado utilizado como referencia durante el curso, con ajustes menores realizados por el equipo. |
+| `Makefile` | Basado en ejemplos de compilación suministrados por el profesor. Se modificó para organizar los archivos del proyecto, incorporar diferentes módulos y facilitar la compilación de pruebas individuales. |
+
+Estos archivos no se presentan como desarrollos completamente originales del equipo ni como código generado íntegramente mediante inteligencia artificial. Se reconoce su procedencia académica y las adaptaciones realizadas.
+
+### 6.3. Responsabilidad y verificación
+
+Las herramientas de inteligencia artificial se utilizaron como apoyo para analizar alternativas, resolver dudas técnicas, revisar código y mejorar la documentación.
+
+El equipo fue responsable de las decisiones finales de diseño, selección y conexión de componentes, adaptación del firmware, programación del microcontrolador y pruebas de funcionamiento sobre el montaje físico.
+
+Las sugerencias obtenidas mediante IA fueron revisadas y adaptadas de acuerdo con los requerimientos del proyecto.
+
