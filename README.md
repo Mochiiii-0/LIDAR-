@@ -149,6 +149,12 @@ También se contemplan las pruebas `sonar`, `tft`, `color`, `escaneo` y `blink`,
 
 ## Validación y resultados
 
+### Video de demostración
+
+[![Video de demostración del escáner ultrasónico](https://img.youtube.com/vi/8bF_f9U14_8/0.jpg)](https://youtube.com/shorts/8bF_f9U14_8)
+
+Demostración del escáner funcionando sobre la NUCLEO-F401RE: [ver en YouTube](https://youtube.com/shorts/8bF_f9U14_8).
+
 El sistema integrado realiza el barrido, obtiene lecturas ultrasónicas y las representa en pantalla. La validación debe documentarse en `docs/` con fotografías del montaje, capturas de UART, señales medidas con osciloscopio y resultados de distancia frente a referencias conocidas.
 
 El artefacto de análisis del firmware reportó para una compilación específica:
